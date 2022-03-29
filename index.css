@@ -142,17 +142,24 @@ input {
     font-size: 16px;
   }
 
+  .btn-edit,
+  .btn-remove,
+  .btn-clear {
+    background-color: var(--background-white);
+  }
+
+  .container__item,
+  .btn-edit,
+  .btn-remove {
+    font-size: 18px;
+  }
+
   .container__app {
     margin: 12px;
   }
 
   .btn-submit {
     font-size: 20px;
-  }
-  .container__item,
-  .btn-edit,
-  .btn-remove {
-    font-size: 18px;
   }
 
   .btn-clear {

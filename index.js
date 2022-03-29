@@ -17,7 +17,7 @@ let editId = ""
 
 form.addEventListener('submit', creatingLi)
 clearButton.addEventListener('click', removeAllItems)
-window.addEventListener('DOMContentLoaded', () => setupItems())
+window.addEventListener('DOMContentLoaded', setupItems)
 
 function setDefault() {
   input.value = ''
