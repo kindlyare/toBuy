@@ -17,7 +17,7 @@ let editId = ""
 
 form.addEventListener('submit', creatingLi)
 clearButton.addEventListener('click', removeAllItems)
-window.addEventListener('DOMContentLoaded', setupItems)
+window.addEventListener('DOMContentLoaded', () => setupItems())
 
 function setDefault() {
   input.value = ''
@@ -53,10 +53,10 @@ function createContainerItem(value, containerItem) {
   <li>${firstLetterUppercase(value)}</li> 
   <div class="container__btns"> 
     <button onclick="getItemToEdit(event)" type="button" class="btn-edit">
-      editar
+      <i class="fa-solid fa-pen"></i>
     </button>
     <button onclick="removeItem(event)" type="button" class="btn-remove" >
-      remover
+      <i class="fa-solid fa-x"></i>
     </button>
   </div>`
 }
@@ -193,17 +193,18 @@ function editLocalStorage(id, value) {
 
 function setupItems() {
   let items = getLocalStorage()
-
   if (items.length > 0) {
     items.forEach((item) => {
       loadListItem(item.id, item.value)
+      console.log(item.value)
     })
   }
 }
 
 function loadListItem(id, value) {
   const containerItem = document.createElement("div")
-
+  containerItems.style.display = 'block'
+  containerBtnClear.style.display = 'flex'
   createContainerItem(value, containerItem)
   setAttrContainerItem(id, containerItem)
 

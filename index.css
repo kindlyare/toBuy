@@ -34,6 +34,7 @@ input {
 	padding: 4px;
 	color: var(--text);
 	width: 100%;
+  letter-spacing: 1px;
 }
 
 .container__title,
@@ -133,4 +134,28 @@ input {
 
 .btn-edit {
   color: var(--color-btn-edit);
+}
+
+@media screen and (max-width: 500px) {
+  input {
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .container__app {
+    margin: 12px;
+  }
+
+  .btn-submit {
+    font-size: 20px;
+  }
+  .container__item,
+  .btn-edit,
+  .btn-remove {
+    font-size: 18px;
+  }
+
+  .btn-clear {
+    font-size: 21px;
+  }
 }
