@@ -78,15 +78,17 @@ function createItem(value) {
   setAttrContainerItem(id, containerItem)
 
   filteredItems = items.filter((item) => {
-    if (item.value == value) {
-      return item.value
+    const itemValue = item.value
+    if (itemValue.toLowerCase() == value.toLowerCase()) {
+      return itemValue
     }
   })
 
+  
   if(filteredItems.length > 0) {
     displayValidation('Já existe nesta lista', 'error')
   } else {
-    addToLocalStorage(id, firstLetterUppercase(value) )
+    addToLocalStorage(id, firstLetterUppercase(value))
     ul.appendChild(containerItem)
   }
 
@@ -111,7 +113,7 @@ function editItem(value) {
   setDefault()
 }
 
-function creatingLi(e) { // mudar da function
+function creatingLi(e) {
   e.preventDefault()
   const value = input.value
 
@@ -125,7 +127,6 @@ function creatingLi(e) { // mudar da function
     displayValidation('Campo vazio', 'error')
   }
 }
-
 
 function removeAllItems() {
   if (ul.childElementCount > 0) {
@@ -196,7 +197,6 @@ function setupItems() {
   if (items.length > 0) {
     items.forEach((item) => {
       loadListItem(item.id, item.value)
-      console.log(item.value)
     })
   }
 }
