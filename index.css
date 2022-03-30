@@ -130,11 +130,6 @@ input {
 	cursor: pointer;
 }
 
-/* .btn-edit,
-.btn-remove {
-  ;
-} */
-
 .btn-submit {
 	background-color: var(--background-btn-submit);
 	padding: 6px;
