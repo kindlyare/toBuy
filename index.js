@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-const containerSubmit = document.querySelector('.container__submit')
 const input = document.querySelector('input')
 const ul = document.querySelector('ul')
 const clearButton = document.querySelector('.btn-clear')
@@ -32,7 +30,7 @@ function firstLetterUppercase(text) {
 
 function displayValidation(text, action) {
   containerValidation.classList.add('container__validation')
-  containerSubmit.insertAdjacentElement('afterend', containerValidation)
+  form.insertAdjacentElement('afterbegin', containerValidation)
   containerValidation.append(span)
   span.textContent = text
   span.classList.add(`alert-${action}`)
@@ -44,7 +42,7 @@ function removeValidation(action) {
     span.textContent = ""
     span.classList.remove(`alert-${action}`)
     containerValidation.remove()
-  }, 2000)
+  }, 1000)
 }
 
 function createContainerItem(value, containerItem) {
@@ -53,7 +51,7 @@ function createContainerItem(value, containerItem) {
   <li>${firstLetterUppercase(value)}</li> 
   <div class="container__btns"> 
     <button onclick="getItemToEdit(event)" type="button" class="btn-edit">
-      <i class="fa-solid fa-pen"></i>
+      <i class="fa-solid fa-pen-to-square"></i>
     </button>
     <button onclick="removeItem(event)" type="button" class="btn-remove" >
       <i class="fa-solid fa-x"></i>
@@ -84,12 +82,12 @@ function createItem(value) {
     }
   })
 
-  
   if(filteredItems.length > 0) {
     displayValidation('Já existe nesta lista', 'error')
   } else {
-    addToLocalStorage(id, firstLetterUppercase(value))
+    addToLocalStorage(id, value)
     ul.appendChild(containerItem)
+    displayValidation(`${firstLetterUppercase(value) } foi adicionado`, `successe`)
   }
 
   setDefault()

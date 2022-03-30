@@ -18,7 +18,9 @@
 	--background-alert-successe: #65A478;
 	--color-btn-clear: #e25050;
 	--color-btn-remove: #F0544F;
+  --background-btn-remove: #f0544f33; 
 	--color-btn-edit: #FAA916;
+  --background-btn-edit: #faa91633;
 }
 
 article {
@@ -59,16 +61,22 @@ input {
 }
 
 .container__app {
+  position: relative;
 	background-color: var(--background-white);
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 	border-radius: 8px;
 	display: flex;
-	padding: 44px 20px;
+	padding: 48px 20px;
 }
 
 .container__items,
 .container__btn-clear {
 	display: none;
+}
+
+.container__btns {
+  display: flex;
+  gap: 13px;
 }
 
 .container__items {
@@ -80,12 +88,17 @@ input {
 }
 
 .container__validation{
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
 	margin: 8px;
+  margin-bottom: 20px;
 }
 
 .container__item {
 	justify-content: space-between;
-	margin: 6px 12px;
+	margin: 18px 12px;
 	letter-spacing: 1.6px;
 }
 
@@ -117,6 +130,11 @@ input {
 	cursor: pointer;
 }
 
+/* .btn-edit,
+.btn-remove {
+  ;
+} */
+
 .btn-submit {
 	background-color: var(--background-btn-submit);
 	padding: 6px;
@@ -128,12 +146,20 @@ input {
 	color: var(--color-btn-clear);
 }
 
+.btn-remove,
+.btn-edit {
+  height: 22px;
+  width: 32px;
+}
+
 .btn-remove {
   color: var(--color-btn-remove);
+  background-color: var(--background-btn-remove);
 }
 
 .btn-edit {
   color: var(--color-btn-edit);
+  background-color: var(--background-btn-edit);
 }
 
 @media screen and (max-width: 500px) {
@@ -142,8 +168,6 @@ input {
     font-size: 16px;
   }
 
-  .btn-edit,
-  .btn-remove,
   .btn-clear {
     background-color: var(--background-white);
   }
@@ -152,6 +176,12 @@ input {
   .btn-edit,
   .btn-remove {
     font-size: 18px;
+  }
+
+  .btn-remove,
+  .btn-edit {
+    height: 26px;
+    width: 36px;
   }
 
   .container__app {
