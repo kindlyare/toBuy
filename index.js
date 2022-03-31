@@ -5,6 +5,7 @@ const submitButton = document.querySelector('.btn-submit')
 const containerItems = document.querySelector('.container__items')
 const containerBtnClear = document.querySelector('.container__btn-clear')
 const form = document.querySelector('form')
+const li = document.querySelector('li')
 
 const containerValidation = document.createElement('div')
 const span = document.createElement('span')
@@ -15,17 +16,32 @@ let editId = ""
 
 form.addEventListener('submit', creatingLi)
 clearButton.addEventListener('click', removeAllItems)
+containerItems.addEventListener('click', checkItem)
 window.addEventListener('DOMContentLoaded', setupItems)
 
 function setDefault() {
-  input.value = ''
+  input.value = ""
   editId = ""
   editFlag = false
-  submitButton.textContent = '  Add'
+  submitButton.textContent = 'Add'
 }
 
 function firstLetterUppercase(text) {
   return text.charAt().toUpperCase() + text.slice(1)
+}
+
+function repeatedItem(value) {
+  let items = getLocalStorage()
+  
+  const filteredItems = items.filter((item) => {
+    const itemValue = item.value.toLowerCase()
+    const inputValue = value.toLowerCase()
+    if (itemValue == inputValue) {
+      return itemValue
+    }
+  })
+  
+  return filteredItems
 }
 
 function displayValidation(text, action) {
@@ -39,8 +55,8 @@ function displayValidation(text, action) {
 
 function removeValidation(action) {
   setTimeout(() => {
-    span.textContent = ""
     span.classList.remove(`alert-${action}`)
+    span.textContent = ""
     containerValidation.remove()
   }, 1000)
 }
@@ -59,37 +75,37 @@ function createContainerItem(value, containerItem) {
   </div>`
 }
 
-function setAttrContainerItem(id, containerItem) {
+function setAttrContainerItem(id, isChecked, containerItem) {
   let attr = document.createAttribute("data-id")
+  let check = document.createAttribute("isChecked")
+  check.value = isChecked
   attr.value = id
   containerItem.setAttributeNode(attr)
+  containerItem.setAttributeNode(check)
+}
+
+function isPluralItem(value, textPlural, textSingular) {
+  const endsWithS = input.value.endsWith('s')
+  return endsWithS
+  ? `"${firstLetterUppercase(value)}" ${textPlural}`
+  : `"${firstLetterUppercase(value)}" ${textSingular}`
 }
 
 function createItem(value) {
   const id = new Date().getTime().toString()
   const containerItem = document.createElement('div')
-
-  let filteredItems = []
-  let items = getLocalStorage()
+  let isChecked = false
 
   createContainerItem(value, containerItem)
-  setAttrContainerItem(id, containerItem)
-
-  filteredItems = items.filter((item) => {
-    const itemValue = item.value
-    if (itemValue.toLowerCase() == value.toLowerCase()) {
-      return itemValue
-    }
-  })
-
-  if(filteredItems.length > 0) {
-    displayValidation('Já existe nesta lista', 'error')
+  setAttrContainerItem(id, isChecked, containerItem)
+  
+  if (repeatedItem(value).length > 0) {
+    displayValidation(isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 'error')
   } else {
-    addToLocalStorage(id, value)
+    addToLocalStorage(id, value, isChecked)
     ul.appendChild(containerItem)
-    displayValidation(`${firstLetterUppercase(value) } foi adicionado`, `successe`)
+    displayValidation(isPluralItem(value, 'foram adicionados', 'foi adicionado'), `successe`)
   }
-
   setDefault()
 }
 
@@ -97,7 +113,7 @@ function getItemToEdit(e) {
   editFlag = true
   const liGet = e.currentTarget.parentElement.parentElement
   editElement = e.currentTarget.parentElement.previousElementSibling
-
+  
   submitButton.textContent = 'Edit'
   input.value = editElement.innerHTML
   editId = liGet.dataset.id;
@@ -105,24 +121,31 @@ function getItemToEdit(e) {
 }
 
 function editItem(value) {
-  editElement.innerHTML = value;
-  displayValidation('Valor editado', 'change')
-  editLocalStorage(editId, value)
-  setDefault()
+
+  if (repeatedItem(value).length > 0) {
+    displayValidation(
+      isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 'error'
+    )
+  } else {
+    editElement.innerHTML = firstLetterUppercase(value);
+    displayValidation('Item foi alterado', 'change')
+    editLocalStorage(editId, value)
+    setDefault()
+  }
 }
 
 function creatingLi(e) {
   e.preventDefault()
   const value = input.value
-
+  
   if (value !== '' && !editFlag) {
     containerItems.style.display = 'block'
     containerBtnClear.style.display = 'flex'
     createItem(value)
-  } else if(value !== '' && editFlag) {
+  } else if (value !== '' && editFlag) {
     editItem(value)
   } else if (value === '') {
-    displayValidation('Campo vazio', 'error')
+    displayValidation('Campo está vazio', 'error')
   }
 }
 
@@ -134,9 +157,21 @@ function removeAllItems() {
   }
   containerBtnClear.style.display = 'none'
   containerItems.style.display = 'none'
-  displayValidation('Lista limpa', 'successe')
+  displayValidation('Lista foi limpa', 'successe')
   localStorage.removeItem("list")
   setDefault()
+}
+
+function checkItem(e) {
+  const isContainerItem = e.target.className === 'container__item'
+  const isLi = e.target.localName === 'li'
+
+  if (isContainerItem || isLi) {
+    e.target.setAttribute('ischecked', true)
+    e.target.style.textDecoration = 'line-through'
+  }
+
+  checkFromLocalStorage(e)
 }
 
 function removeItem(e) {
@@ -153,10 +188,10 @@ function removeItem(e) {
   }
 }
 
-function addToLocalStorage(id, value) {
-  const grocery = { id, value }
+function addToLocalStorage(id, value, isChecked) {
+  const props = { id, value, isChecked}
   let items = getLocalStorage()
-  items.push(grocery)
+  items.push(props)
   localStorage.setItem("list", JSON.stringify(items))
 }
 
@@ -164,6 +199,25 @@ function getLocalStorage() {
   return localStorage.getItem("list")
     ? JSON.parse(localStorage.getItem("list"))
     : []
+}
+
+function checkFromLocalStorage(e) {
+  const idContainer = e.srcElement.dataset.id
+  const idFromLi = e.srcElement.parentElement.dataset.id
+  const isLi = e.target.localName === 'li'
+  const isElement = e.target.className === 'container__item'
+
+  if (isElement || isLi) {
+    let items = getLocalStorage()
+
+    items = items.map((item) => {
+      if (item.id === idContainer || item.id === idFromLi) {
+        item.isChecked = true
+      }
+      return item
+    })
+    localStorage.setItem("list", JSON.stringify(items))
+  }
 }
 
 function removeFromLocalStorage(id) {
@@ -174,7 +228,6 @@ function removeFromLocalStorage(id) {
       return item
     }
   })
-
   localStorage.setItem("list", JSON.stringify(items))
 }
 
@@ -194,17 +247,20 @@ function setupItems() {
   let items = getLocalStorage()
   if (items.length > 0) {
     items.forEach((item) => {
-      loadListItem(item.id, item.value)
+      loadListItem(item.id, item.value, item.isChecked)
     })
   }
 }
 
-function loadListItem(id, value) {
+function loadListItem(id, value, isChecked) {
   const containerItem = document.createElement("div")
   containerItems.style.display = 'block'
   containerBtnClear.style.display = 'flex'
   createContainerItem(value, containerItem)
-  setAttrContainerItem(id, containerItem)
+  setAttrContainerItem(id, isChecked, containerItem)
+  if (isChecked) {
+    containerItem.style.textDecoration = 'line-through'
+  }
 
   ul.append(containerItem)
 }

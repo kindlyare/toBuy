@@ -18,7 +18,7 @@
 	--background-alert-successe: #65A478;
 	--color-btn-clear: #e25050;
 	--color-btn-remove: #F0544F;
-  --background-btn-remove: #f0544f33; 
+  --background-btn-remove: #f0544f33;
 	--color-btn-edit: #FAA916;
   --background-btn-edit: #faa91633;
 }
@@ -34,9 +34,13 @@ article {
 input {
 	background-color: var(--background-main);
 	padding: 4px;
-	color: var(--text);
 	width: 100%;
   letter-spacing: 1px;
+}
+
+input::placeholder {
+	color: var(--text);
+	opacity: 0.8;
 }
 
 .container__title,
@@ -66,7 +70,8 @@ input {
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 	border-radius: 8px;
 	display: flex;
-	padding: 48px 20px;
+	padding: 44px 20px;
+	margin: 12px;
 }
 
 .container__items,
@@ -89,7 +94,7 @@ input {
 
 .container__validation{
   position: absolute;
-  top: 5px;
+  top: -56px;
   left: 0;
   right: 0;
 	margin: 8px;
@@ -97,9 +102,22 @@ input {
 }
 
 .container__item {
-	justify-content: space-between;
-	margin: 18px 12px;
+  justify-content: space-between;
+	align-items: center;
 	letter-spacing: 1.6px;
+	margin: 18px auto;
+  transition: 0.2s;
+}
+
+.container__item:hover {
+  background: var(--background-main);
+  transition: 0.6s;
+}
+
+.container__item li {
+	padding-left: 4px;
+	padding-right: 16px;
+	max-width: 200px;
 }
 
 .alert-error,
@@ -145,6 +163,7 @@ input {
 .btn-edit {
   height: 22px;
   width: 32px;
+  z-index: 5;
 }
 
 .btn-remove {
@@ -163,6 +182,10 @@ input {
     font-size: 16px;
   }
 
+	h3 {
+		font-size: 24px;
+	}
+
   .btn-clear {
     background-color: var(--background-white);
   }
@@ -179,12 +202,9 @@ input {
     width: 36px;
   }
 
-  .container__app {
-    margin: 12px;
-  }
-
   .btn-submit {
-    font-size: 20px;
+    font-size: 18px;
+		font-weight: 500;
   }
 
   .btn-clear {
