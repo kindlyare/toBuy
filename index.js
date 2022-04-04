@@ -5,21 +5,20 @@ const submitButton = document.querySelector('.btn-submit')
 const containerItems = document.querySelector('.container__items')
 const containerBtnClear = document.querySelector('.container__btn-clear')
 const form = document.querySelector('form')
-const li = document.querySelector('li')
 
-const containerValidation = document.createElement('div')
-const span = document.createElement('span')
+
+const textValidation = document.createElement('span')
 
 let editElement
 let editFlag = false
 let editId = ""
 
-form.addEventListener('submit', creatingLi)
+form.addEventListener('submit', createLi)
 clearButton.addEventListener('click', removeAllItems)
 containerItems.addEventListener('click', checkItem)
 window.addEventListener('DOMContentLoaded', setupItems)
 
-function setDefault() {
+function setReset() {
   input.value = ""
   editId = ""
   editFlag = false
@@ -32,7 +31,7 @@ function firstLetterUppercase(text) {
 
 function repeatedItem(value) {
   let items = getLocalStorage()
-  
+
   const filteredItems = items.filter((item) => {
     const itemValue = item.value.toLowerCase()
     const inputValue = value.toLowerCase()
@@ -40,25 +39,27 @@ function repeatedItem(value) {
       return itemValue
     }
   })
-  
+
   return filteredItems
 }
 
-function displayValidation(text, action) {
+function createValidation(text, action) {
+  const containerValidation = document.createElement('div')
   containerValidation.classList.add('container__validation')
+  containerValidation.innerHTML = `
+    <span class="alert-${action}">${text}</span>
+  `
+  let messages = []
+  messages.push(containerValidation)
   form.insertAdjacentElement('afterbegin', containerValidation)
-  containerValidation.append(span)
-  span.textContent = text
-  span.classList.add(`alert-${action}`)
-  removeValidation(action)
+  removeValidation(messages)
 }
 
-function removeValidation(action) {
+function removeValidation(message) {
   setTimeout(() => {
-    span.classList.remove(`alert-${action}`)
-    span.textContent = ""
-    containerValidation.remove()
-  }, 1000)
+   const firstMessage = message.shift()
+   firstMessage.remove()
+  }, 2000)
 }
 
 function createContainerItem(value, containerItem) {
@@ -100,20 +101,26 @@ function createItem(value) {
   setAttrContainerItem(id, isChecked, containerItem)
   
   if (repeatedItem(value).length > 0) {
-    displayValidation(isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 'error')
+    createValidation(isPluralItem(
+      value, 'Já foram adicionados', 'Já foi adicionado'),
+      'error'
+    )
   } else {
     addToLocalStorage(id, value, isChecked)
     ul.appendChild(containerItem)
-    displayValidation(isPluralItem(value, 'foram adicionados', 'foi adicionado'), `successe`)
+    createValidation(
+      isPluralItem(value, 'foram adicionados', 'foi adicionado'), 
+      `successe`
+    )
   }
-  setDefault()
+  setReset()
 }
 
 function getItemToEdit(e) {
   editFlag = true
   const liGet = e.currentTarget.parentElement.parentElement
   editElement = e.currentTarget.parentElement.previousElementSibling
-  
+
   submitButton.textContent = 'Edit'
   input.value = editElement.innerHTML
   editId = liGet.dataset.id;
@@ -123,18 +130,19 @@ function getItemToEdit(e) {
 function editItem(value) {
 
   if (repeatedItem(value).length > 0) {
-    displayValidation(
-      isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 'error'
+    createValidation(
+      isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 
+      'error'
     )
   } else {
     editElement.innerHTML = firstLetterUppercase(value);
-    displayValidation('Item foi alterado', 'change')
+    createValidation('Item foi alterado', 'change')
     editLocalStorage(editId, value)
-    setDefault()
+    setReset()
   }
 }
 
-function creatingLi(e) {
+function createLi(e) {
   e.preventDefault()
   const value = input.value
   
@@ -145,7 +153,7 @@ function creatingLi(e) {
   } else if (value !== '' && editFlag) {
     editItem(value)
   } else if (value === '') {
-    displayValidation('Campo está vazio', 'error')
+    createValidation('Campo está vazio', 'error')
   }
 }
 
@@ -157,9 +165,9 @@ function removeAllItems() {
   }
   containerBtnClear.style.display = 'none'
   containerItems.style.display = 'none'
-  displayValidation('Lista foi limpa', 'successe')
+  createValidation('Lista foi limpa', 'successe')
   localStorage.removeItem("list")
-  setDefault()
+  setReset()
 }
 
 function checkItem(e) {
@@ -180,12 +188,18 @@ function removeItem(e) {
 
   ul.removeChild(liGet)
   removeFromLocalStorage(id)
-  setDefault()
+  setReset()
 
   if (ul.childElementCount == 0) {
     containerItems.style.display = 'none'
     containerBtnClear.style.display = 'none'
   }
+}
+
+function getLocalStorage() {
+  return localStorage.getItem("list")
+    ? JSON.parse(localStorage.getItem("list"))
+    : []
 }
 
 function addToLocalStorage(id, value, isChecked) {
@@ -195,23 +209,17 @@ function addToLocalStorage(id, value, isChecked) {
   localStorage.setItem("list", JSON.stringify(items))
 }
 
-function getLocalStorage() {
-  return localStorage.getItem("list")
-    ? JSON.parse(localStorage.getItem("list"))
-    : []
-}
-
 function checkFromLocalStorage(e) {
-  const idContainer = e.srcElement.dataset.id
-  const idFromLi = e.srcElement.parentElement.dataset.id
+  const containerId = e.srcElement.dataset.id
+  const liFromId = e.srcElement.parentElement.dataset.id
   const isLi = e.target.localName === 'li'
-  const isElement = e.target.className === 'container__item'
+  const isContainerItem = e.target.className === 'container__item'
 
-  if (isElement || isLi) {
+  if (isContainerItem || isLi) {
     let items = getLocalStorage()
 
     items = items.map((item) => {
-      if (item.id === idContainer || item.id === idFromLi) {
+      if (item.id === containerId || item.id === liFromId) {
         item.isChecked = true
       }
       return item
@@ -246,7 +254,7 @@ function editLocalStorage(id, value) {
 function setupItems() {
   let items = getLocalStorage()
   if (items.length > 0) {
-    items.forEach((item) => {
+    items.forEach(item => {
       loadListItem(item.id, item.value, item.isChecked)
     })
   }
