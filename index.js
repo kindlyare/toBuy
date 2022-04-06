@@ -5,9 +5,7 @@ const submitButton = document.querySelector('.btn-submit')
 const containerItems = document.querySelector('.container__items')
 const containerBtnClear = document.querySelector('.container__btn-clear')
 const form = document.querySelector('form')
-
-
-const textValidation = document.createElement('span')
+const containerValidations = document.querySelector('.container__validations')
 
 let editElement
 let editFlag = false
@@ -25,9 +23,8 @@ function setReset() {
   submitButton.textContent = 'Add'
 }
 
-function firstLetterUppercase(text) {
-  return text.charAt().toUpperCase() + text.slice(1)
-}
+const firstLetterUppercase = text => 
+  text.charAt().toUpperCase() + text.slice(1)
 
 function repeatedItem(value) {
   let items = getLocalStorage()
@@ -43,15 +40,19 @@ function repeatedItem(value) {
   return filteredItems
 }
 
-function createValidation(text, action) {
-  const containerValidation = document.createElement('div')
-  containerValidation.classList.add('container__validation')
-  containerValidation.innerHTML = `
-    <span class="alert-${action}">${text}</span>
-  `
+function createAlert(text, action) {
+  const containerAlert = document.createElement('div')
+  const errorAction = action === 'error'
+  if (containerValidations.children.length < 5 && errorAction) {
+    containerAlert.classList.add('container__validation')
+    containerAlert.innerHTML = `<span class='alert-${action}'>${text}</span>`
+  } else if (!errorAction) {
+    containerAlert.classList.add('container__validation')
+    containerAlert.innerHTML = `<span class='alert-${action}'>${text}</span>`
+  }
+  containerValidations.append(containerAlert)
   let messages = []
-  messages.push(containerValidation)
-  form.insertAdjacentElement('afterbegin', containerValidation)
+  messages.push(containerAlert)
   removeValidation(messages)
 }
 
@@ -59,7 +60,7 @@ function removeValidation(message) {
   setTimeout(() => {
    const firstMessage = message.shift()
    firstMessage.remove()
-  }, 2000)
+  }, 2500)
 }
 
 function createContainerItem(value, containerItem) {
@@ -101,14 +102,15 @@ function createItem(value) {
   setAttrContainerItem(id, isChecked, containerItem)
   
   if (repeatedItem(value).length > 0) {
-    createValidation(isPluralItem(
+    createAlert(
+      isPluralItem(
       value, 'Já foram adicionados', 'Já foi adicionado'),
       'error'
     )
   } else {
     addToLocalStorage(id, value, isChecked)
     ul.appendChild(containerItem)
-    createValidation(
+    createAlert(
       isPluralItem(value, 'foram adicionados', 'foi adicionado'), 
       `successe`
     )
@@ -130,13 +132,13 @@ function getItemToEdit(e) {
 function editItem(value) {
 
   if (repeatedItem(value).length > 0) {
-    createValidation(
+    createAlert(
       isPluralItem(value, 'Já foram adicionados', 'Já foi adicionado'), 
       'error'
     )
   } else {
     editElement.innerHTML = firstLetterUppercase(value);
-    createValidation('Item foi alterado', 'change')
+    createAlert('Alterado com sucesso', 'successe')
     editLocalStorage(editId, value)
     setReset()
   }
@@ -144,7 +146,7 @@ function editItem(value) {
 
 function createLi(e) {
   e.preventDefault()
-  const value = input.value
+  const value = input.value.trim()
   
   if (value !== '' && !editFlag) {
     containerItems.style.display = 'block'
@@ -153,7 +155,7 @@ function createLi(e) {
   } else if (value !== '' && editFlag) {
     editItem(value)
   } else if (value === '') {
-    createValidation('Campo está vazio', 'error')
+    createAlert('Campo está vazio', 'error')
   }
 }
 
@@ -165,7 +167,7 @@ function removeAllItems() {
   }
   containerBtnClear.style.display = 'none'
   containerItems.style.display = 'none'
-  createValidation('Lista foi limpa', 'successe')
+  createAlert('Lista foi limpa', 'successe')
   localStorage.removeItem("list")
   setReset()
 }
