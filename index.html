@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt_BR">
+<html lang="br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,32 +12,28 @@
 </head>
 <body>
   <main>
-    <article>
-      <section>
-        <div class="container__app">
-          <form>
-            <div class="container__title">
-              <h3>Sua Lista de Compras</h3>
-            </div>
-            <div class="container__submit">
-              <input type="text" placeholder="ex: ovos">
-              <button class="btn-submit">
-                Add
-              </button>
-            </div>
-            <div class="container__items">
-              <ul class="list"></ul>
-            </div>
-            <div class="container__btn-clear" >
-              <button type="button" class="btn-clear">
-                Limpar Itens
-              </button>
-            </div>
-          </form>
-          <div class="container__validations"></div>
+    <div class="container__app">
+      <form>
+        <article class="container__title">
+          <h3>Sua Lista de Compras</h3>
+        </article>
+        <div class="container__submit">
+          <input type="text" placeholder="ex: ovos">
+          <button class="submit-btn">
+            Add
+          </button>
         </div>
-      </section>
-    </article>
+        <div class="container__items">
+          <ul class="list"></ul>
+        </div>
+        <div class="container__clear-btn" >
+          <button type="button" class="clear-btn">
+            Limpar Itens
+          </button>
+        </div>
+      </form>
+      <div class="container__validations"></div>
+    </div>
   </main>
 	<script src="index.js"></script>
   <script src="https://kit.fontawesome.com/1cb08dbbcd.js" crossorigin="anonymous"></script>

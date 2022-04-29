@@ -17,17 +17,17 @@
   --background-alert-change: #F8C663;
   --background-alert-successe: #65A478;
   --color-btn-clear: #e25050;
-  --color-btn-remove: #F0544F;
-  --background-btn-remove: #f0544f33;
-  --color-btn-edit: #FAA916;
-  --background-btn-edit: #faa91633;
+  --color-remove-btn: #F0544F;
+  --background-remove-btn: #f0544f33;
+  --color-edit-btn: #FAA916;
+  --background-edit-btn: #faa91633;
 }
 
 ul {
   margin-top: 40px;
 }
 
-article {
+main {
   background-color: var(--background-main);
   min-height: 100vh;
   display: flex;
@@ -79,7 +79,7 @@ input::placeholder {
 }
 
 .container__items,
-.container__btn-clear {
+.container__clear-btn {
   display: none;
 }
 
@@ -90,23 +90,6 @@ input::placeholder {
 
 .container__items {
   margin: 24px auto;
-}
-
-.container__btn-clear {
-  justify-content: center;
-}
-
-.container__validations {
-  position: absolute;
-  top: 122px;
-  left: 0;
-  right: 0;
-  z-index: 3;
-}
-
-.container__validation {
-  margin: 8px;
-  margin-bottom: 20px;
 }
 
 .container__item {
@@ -122,10 +105,28 @@ input::placeholder {
   transition: 0.6s;
 }
 
-.container__item li {
+.item {
   padding-left: 4px;
   padding-right: 16px;
-  max-width: 200px;
+  max-width: 300px;
+  word-break: break-word;
+}
+
+.container__clear-btn {
+  justify-content: center;
+}
+
+.container__validations {
+  position: absolute;
+  top: 122px;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}
+
+.container__validation {
+  margin: 8px;
+  margin-bottom: 20px;
 }
 
 .alert-error,
@@ -149,63 +150,62 @@ input::placeholder {
   background-color: var(--background-alert-successe);
 }
 
-.btn-submit,
-.btn-clear,
-.btn-remove,
-.btn-edit {
+.submit-btn,
+.clear-btn,
+.remove-btn,
+.edit-btn {
   cursor: pointer;
 }
 
-.btn-submit {
+.submit-btn {
   background-color: var(--background-btn-submit);
   padding: 6px;
   border-radius: 0 5px 5px 0;
   color: var(--text);
 }
 
-.btn-clear {
+.clear-btn {
   color: var(--color-btn-clear);
 }
 
-.btn-remove,
-.btn-edit {
+.remove-btn,
+.edit-btn {
   height: 22px;
   width: 32px;
   z-index: 5;
 }
 
-.btn-remove {
-  color: var(--color-btn-remove);
-  background-color: var(--background-btn-remove);
+.remove-btn {
+  color: var(--color-remove-btn);
+  background-color: var(--background-remove-btn);
 }
 
-.btn-edit {
-  color: var(--color-btn-edit);
-  background-color: var(--background-btn-edit);
+.edit-btn {
+  color: var(--color-edit-btn);
+  background-color: var(--background-edit-btn);
 }
 
 @media screen and (max-width: 500px) {
   input {
-    height: 36px;
-    font-size: 16px;
+    font-size: 14px;
   }
 
-    h3 {
-      font-size: 24px;
-    }
+  h3 {
+    font-size: 24px;
+  }
 
-  .btn-clear {
+  .clear-btn {
     background-color: var(--background-white);
   }
 
   .container__item,
-  .btn-edit,
-  .btn-remove {
+  .edit-btn,
+  .remove-btn {
     font-size: 18px;
   }
 
-  .btn-remove,
-  .btn-edit {
+  .remove-btn,
+  .edit-btn {
     height: 26px;
     width: 36px;
   }
@@ -215,7 +215,7 @@ input::placeholder {
     font-weight: 500;
   }
 
-  .btn-clear {
+  .clear-btn {
     font-size: 21px;
   }
 }
