@@ -23,7 +23,7 @@
   --background-edit-btn: #faa91633;
 }
 
-ul {
+.list {
   margin-top: 40px;
 }
 
@@ -40,6 +40,12 @@ input {
   padding: 4px;
   width: 100%;
   letter-spacing: 1px;
+}
+
+input:focus-visible {
+  outline: none;
+  border-bottom: 2.5px solid hsl(196, 28%, 60%);
+  transition: 0.15s;
 }
 
 input::placeholder {
